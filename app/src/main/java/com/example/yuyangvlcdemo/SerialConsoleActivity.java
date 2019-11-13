@@ -24,6 +24,7 @@ package com.example.yuyangvlcdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -82,7 +83,6 @@ public class SerialConsoleActivity extends AppCompatActivity {
     private HashMap<DataType, Integer> mappingSrc;
 
 
-
     /* Response callback Interface */
     public interface IReceived {
         void getResponseBody(String msg);
@@ -124,14 +124,14 @@ public class SerialConsoleActivity extends AppCompatActivity {
             case 'C':
               // Toast.makeText(this, "Co2:" + ParsingVLCData.getCO2Info(data) + ":" + (data[4] & 0xFF) + ":" + (data[5] & 0xFF) + ":TEST" + (char)data[3], Toast.LENGTH_SHORT).show();
                 dataController.addCO2(new ItemCO2(ParsingVLCData.getCO2Info(data)));
-                updateGraph(DataType.CO2);
+                updateGraph(DataType.CO2, Color.GREEN);
                 //printList(DataType.CO2);
                 break;
             case 'T':
                 dataController.addTemp(new ItemTemprature(ParsingVLCData.getTempInfo(data)));
                 dataController.addHumi(new ItemHumidity(ParsingVLCData.getHumiInfo(data)));
-                updateGraph(DataType.TEMP);
-                updateGraph(DataType.HUMI);
+                updateGraph(DataType.TEMP, Color.RED);
+                updateGraph(DataType.HUMI, Color.BLUE);
                 //printList(DataType.TEMP);
                 //Toast.makeText(this, "TEMP:" +  ParsingVLCData.getTempInfo(data) + " HUMI:" + ParsingVLCData.getHumiInfo(data), Toast.LENGTH_SHORT).show();
 
@@ -154,19 +154,17 @@ public class SerialConsoleActivity extends AppCompatActivity {
                 res += test.get(i).getDoubleValue();
             res+=" ";
         }
-
         Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
     }
 
 
 
-    private void updateGraph(DataType type)
+    private void updateGraph(DataType type, int lineColor)
     {
         int rsc = mappingSrc.get(type);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(rsc, new DataGraphFragment((type))).commit();
+        transaction.replace(rsc, new DataGraphFragment((type), lineColor)).commit();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,9 +176,9 @@ public class SerialConsoleActivity extends AppCompatActivity {
 //        graph.add(new DataGraphFragment(DataType.TEMP));
 //        graph.add(new DataGraphFragment(DataType.HUMI));
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.graph_co2 , new DataGraphFragment(DataType.CO2)).
-                replace(R.id.graph_temp , new DataGraphFragment(DataType.TEMP)).
-                replace(R.id.graph_humi , new DataGraphFragment(DataType.HUMI)).commit();
+        transaction.replace(R.id.graph_co2 , new DataGraphFragment(DataType.CO2, Color.GREEN)).
+                replace(R.id.graph_temp , new DataGraphFragment(DataType.TEMP, Color.RED)).
+                replace(R.id.graph_humi , new DataGraphFragment(DataType.HUMI, Color.BLUE)).commit();
 
         mappingSrc = new HashMap<DataType, Integer>();
         mappingSrc.put(DataType.CO2, R.id.graph_co2);

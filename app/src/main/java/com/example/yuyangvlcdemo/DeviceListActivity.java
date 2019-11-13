@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +158,7 @@ public class DeviceListActivity extends Activity {
 
                 final String subtitle = driver.getClass().getSimpleName();
                 row.getText2().setText(subtitle);
+                row.setGravity(Gravity.CENTER);
 
                 return row;
             }

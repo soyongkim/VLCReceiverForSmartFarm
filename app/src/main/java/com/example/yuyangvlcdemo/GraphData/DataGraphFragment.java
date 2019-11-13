@@ -1,5 +1,6 @@
 package com.example.yuyangvlcdemo.GraphData;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,14 @@ public class DataGraphFragment extends Fragment {
     private DataType type;
     private GraphView graph;
     private LineGraphSeries<DataPoint> mSeries;
+    private int lineColor;
     private DataController dataController = DataController.getInstance();
     private ArrayList<Item> list;
 
-    public DataGraphFragment(DataType _type)
+    public DataGraphFragment(DataType _type, int _lineColor)
     {
         type = _type;
+        lineColor = _lineColor;
     }
 
     @Override
@@ -36,6 +39,7 @@ public class DataGraphFragment extends Fragment {
 
         list = loadData();
         mSeries = new LineGraphSeries<DataPoint>(generateData());
+        mSeries.setColor(lineColor);
         graph.addSeries(mSeries);
 
         // set manual X bounds
